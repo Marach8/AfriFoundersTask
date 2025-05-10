@@ -1,2 +1,0 @@
-C:/Users/nnannamarach/FlutterProjects/contact_alarm/android/app/.cxx/Debug/6w3ow67w/x86/CMakeFiles/edit_cache.dir
-C:/Users/nnannamarach/FlutterProjects/contact_alarm/android/app/.cxx/Debug/6w3ow67w/x86/CMakeFiles/rebuild_cache.dir
