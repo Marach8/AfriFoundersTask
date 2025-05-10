@@ -5,5 +5,5 @@ export 'home/data/repository/home_repo_impl.dart';
 export 'add_contact/data/repository/add_contact_repo.dart';
 export 'add_contact/data/repository/add_contact_repo_impl.dart';
 export 'add_contact/v_models/add_contact_v_model_export.dart';
-export 'home/v_models/contacts_v_model_export.dart';
+export 'home/v_models/home_v_model_export.dart';
 export 'home/presentation/home_prez_export.dart';

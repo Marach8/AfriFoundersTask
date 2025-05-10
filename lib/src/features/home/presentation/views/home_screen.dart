@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:contact_alarm/main.dart' show AfriRouteTransiton;
 import 'package:contact_alarm/src/global_export.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 class AfriHomeScreen extends StatefulWidget {
   const AfriHomeScreen({super.key});
@@ -21,6 +22,7 @@ class _AfriHomeScreenState extends State<AfriHomeScreen> {
         ref.read(contactsProvider.notifier).loadContacts();
       }
     );
+    FlutterNativeSplash.remove();
   }
 
 

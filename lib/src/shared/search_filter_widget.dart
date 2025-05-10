@@ -35,7 +35,7 @@ class AfriFilterWidget extends ConsumerWidget {
               return TextSpan(
                 text: stringOfText,
                 style: shouldHighlightString ? style?.copyWith(
-                  color: AfriColors.yellow
+                  color: AfriColors.successColor
                 ) : style                              
               );
             }

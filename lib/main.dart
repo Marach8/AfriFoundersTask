@@ -1,8 +1,10 @@
 import 'dart:ui';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'src/global_export.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await HiveContactService.intializeHive();
   await NotificationService.initializeNotification();
@@ -59,7 +61,7 @@ class AfriRouteTransiton<T> extends PageRouteBuilder<T> {
         child: child,
       );
     },
-    reverseTransitionDuration: const Duration(milliseconds: 200),
-    transitionDuration: const Duration(milliseconds: 200),
+    reverseTransitionDuration: const Duration(milliseconds: 300),
+    transitionDuration: const Duration(milliseconds: 300),
   );
 }

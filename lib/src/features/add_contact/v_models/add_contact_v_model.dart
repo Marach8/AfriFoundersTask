@@ -22,7 +22,7 @@ class AddContactNotifier extends StateNotifier<AsyncValue<bool?>>{
     state = const AsyncLoading();
     try{
       //Simulate an API call
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 1));
       
       final contact = Contact(name: name, phoneNumber: phoneNumber);
 

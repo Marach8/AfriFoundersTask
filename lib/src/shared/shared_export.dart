@@ -8,3 +8,5 @@ export 'sliver_header_delegate.dart';
 export 'shimmer.dart';
 export 'elevated_btn.dart';
 export 'loading_indicator.dart';
+export 'dialogs/confirm_action_dialog.dart';
+export 'divider_widget.dart';

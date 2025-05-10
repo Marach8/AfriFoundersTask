@@ -94,42 +94,53 @@ class _AfriAddContactScreenState extends State<AfriAddContactScreen> with AfriVa
         ),
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
-          child: Consumer(
-            builder: (_, ref, __) {
-              final isLoading = ref.watch(addContactProvider) is AsyncLoading;
-              return AfriElevatedBtn(
-                showLoading: isLoading,
-                onPressed: ()async{
-                  if(_formKey.currentState?.validate() ?? false){
-                    final result = await ref.read(addContactProvider.notifier).addAContact(
-                      name: _nameCntrl.text.trim(),
-                      phoneNumber: _phoneCntrl.text.trim()
-                    );
-
-                    if(context.mounted){
-                      if(result){
-                        showAppNotification(
-                          context: context,
-                          icon: Icon(Icons.check_circle, color: AfriColors.white,),
-                          text: '${_nameCntrl.text.trim()} ${AfriStrings.ADDED_SUCCESSFULY}',
-                          bgColor: AfriColors.successColor
-                        );
-                        _nameCntrl.clear(); _phoneCntrl.clear();
-                      }
-                      else{
-                        final error = ref.read(addContactProvider).error as String;
-                        if(context.mounted){
-                          showAppNotification(
-                            context: context,
-                            icon: Icon(Icons.warning_rounded, color: AfriColors.white,),
-                            text: error,
+          child: FutureBuilder(
+            future: Future.delayed(const Duration(milliseconds: 1000)),
+            builder: (_, snapshot) {
+              final shouldShow = snapshot.connectionState == ConnectionState.done;
+              return Consumer(
+                builder: (_, ref, __) {
+                  final isLoading = ref.watch(addContactProvider) is AsyncLoading;
+                  return AnimatedSlide(
+                    duration: const Duration(milliseconds: 300),
+                    //curve: Curves.bounceOut,
+                    offset: shouldShow ? const Offset(0, 0) : const Offset(0, 1.5),
+                    child: AfriElevatedBtn(
+                      showLoading: isLoading,
+                      onPressed: ()async{
+                        if(_formKey.currentState?.validate() ?? false){
+                          final result = await ref.read(addContactProvider.notifier).addAContact(
+                            name: _nameCntrl.text.trim(),
+                            phoneNumber: _phoneCntrl.text.trim()
                           );
+                    
+                          if(context.mounted){
+                            if(result){
+                              showAppNotification(
+                                context: context,
+                                icon: Icon(Icons.check_circle, color: AfriColors.white,),
+                                text: '${_nameCntrl.text.trim()} ${AfriStrings.ADDED_SUCCESSFULY}',
+                                bgColor: AfriColors.successColor
+                              );
+                              _nameCntrl.clear(); _phoneCntrl.clear();
+                            }
+                            else{
+                              final error = ref.read(addContactProvider).error as String;
+                              if(context.mounted){
+                                showAppNotification(
+                                  context: context,
+                                  icon: Icon(Icons.warning_rounded, color: AfriColors.white,),
+                                  text: error,
+                                );
+                              }
+                            }
+                          }
                         }
-                      }
-                    }
-                  }
-                },
-                btnTitle: AfriStrings.SAVE_CONTACT,
+                      },
+                      btnTitle: AfriStrings.SAVE_CONTACT,
+                    ),
+                  );
+                }
               );
             }
           ),

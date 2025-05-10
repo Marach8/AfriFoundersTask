@@ -1,1 +1,0 @@
-export 'contacts_v_model.dart';
