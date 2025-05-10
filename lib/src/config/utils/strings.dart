@@ -11,6 +11,7 @@ class AfriStrings{
   static const NO_SEARCH_RESULTS = 'No result(s) found for this search...';
   static const SAVE_CONTACT = 'Save contact';
   static const NAME = 'Name';
+  static const CLEAR = 'Clear';
   static const PROCEED = 'Proceed';
   static const DELETE = 'Delete';
   static const HAS_BEEN_DELETED = 'has been deleted.';

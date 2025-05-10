@@ -39,6 +39,25 @@ class LoadContactsNotifier extends StateNotifier<AsyncValue<List<Contact>?>>{
   }
 
 
+  Future<void> clearContacts() async{    
+    try{
+      final response = await homeRepo.clearContacts();
+      response.when(
+        successful: (result){
+          _contacts = [];
+          state = AsyncData([]);
+        },
+        error: (error) => state = AsyncError(
+          error.error.exectionMsg, StackTrace.current
+        )
+      );
+    }
+    catch (e){
+      state = AsyncError(e.toString(), StackTrace.current);
+    }
+  }
+
+
   void filterContacts(String searchKey) async{    
     if(searchKey.isEmpty){
       ref.invalidate(stringProvider(AfriStrings.ENTER_SEARCH_KEY));

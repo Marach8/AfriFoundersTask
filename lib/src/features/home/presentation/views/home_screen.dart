@@ -58,6 +58,21 @@ class _AfriHomeScreenState extends State<AfriHomeScreen> {
                   AfriStrings.ALL_CONTACTS,
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: InkWell(
+                      onTap: () => ref.read(contactsProvider.notifier).clearContacts(),
+                      borderRadius: BorderRadius.circular(10),
+                      child: Text(
+                        AfriStrings.CLEAR,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color: AfriColors.red
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
           
               SliverPersistentHeader(

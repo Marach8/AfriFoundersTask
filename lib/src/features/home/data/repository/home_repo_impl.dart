@@ -28,4 +28,15 @@ class HomeRepoImplA implements HomeRepo {
       return Error(error: AfriException(e.toString(), StackTrace.current));
     }
   }
+
+
+  @override
+  Future<ApiResponse<bool>> clearContacts() async {
+    try {
+      await HiveContactService.deleteAllContacts();
+      return Successful(data: true);
+    } catch (e) {
+      return Error(error: AfriException(e.toString(), StackTrace.current));
+    }
+  }
 }
