@@ -13,8 +13,32 @@ void main() async {
 }
 
 
-class AfriApp extends StatelessWidget {
+class AfriApp extends StatefulWidget {
   const AfriApp({super.key});
+
+  @override
+  State<AfriApp> createState() => _AfriAppState();
+}
+
+class _AfriAppState extends State<AfriApp> with WidgetsBindingObserver{
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if(state == AppLifecycleState.detached){
+      HiveContactService.close();
+    }
+  }
 
   @override
   Widget build(context) {

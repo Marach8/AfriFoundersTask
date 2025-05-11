@@ -8,16 +8,16 @@ import '../../global_export.dart';
 class HiveContactService {
   HiveContactService._();
 
-  static bool _isInitialized = false;
   static late final Box<Contact> _contactBox;
 
   static Future<void> intializeHive() async {
-    if (_isInitialized) return;
+    log('Hive was initialized...');
+    //log(_contactBox.isOpen.toString());
     
     await Hive.initFlutter();
     Hive.registerAdapter(ContactAdapter());
     _contactBox = await Hive.openBox<Contact>(AfriStrings.ALL_CONTACTS);
-    _isInitialized = true;
+    //_contactBox.values.forEach((e) => log(e.name ?? ''));
   }
 
 
@@ -38,6 +38,9 @@ class HiveContactService {
   }
 
 
+
+
+
   static final _deleteLock = Lock();
   static final Map<String, bool> _pendingDeletions = {};
 
@@ -47,8 +50,14 @@ class HiveContactService {
     return await _deleteLock.synchronized(() async {
       try {
         _pendingDeletions[contactId] = true;
+
+        final contacts = await getContacts();
+        await deleteAllContacts();
+        contacts.removeWhere((contact) => contact.id == contactId);
+        for(Contact contact in contacts){
+          addContact(contact);
+        }
         
-        await _contactBox.delete(contactId);
       } 
       finally {
         _pendingDeletions.remove(contactId);
@@ -59,6 +68,5 @@ class HiveContactService {
 
   static Future<void> close() async {
     await _contactBox.close();
-    _isInitialized = false;
   }
 }

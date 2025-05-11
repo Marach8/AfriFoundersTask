@@ -38,10 +38,14 @@ class AfriContactList extends ConsumerWidget {
             itemCount: contacts?.length ?? (constraints.maxHeight ~/ 50),
             physics: const BouncingScrollPhysics(),
             itemBuilder: (_, listIndex){
-              final contact = contacts?.elementAtOrNull(listIndex);
+              final contact = contacts?.elementAt(listIndex);
+
+              if(!hasData || contact == null){
+                return ContactLoadingShimmer(parentWidth: constraints.maxWidth);
+              }
               
               return Dismissible(
-                key: Key(contact?.id ?? ''),
+                key: UniqueKey(),
                 background: AfriContainer(
                   color: AfriColors.red, radius: 8,
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -50,14 +54,14 @@ class AfriContactList extends ConsumerWidget {
                     children: List.filled(2, Icon(CupertinoIcons.delete)),
                   ),
                 ),
-                confirmDismiss: !hasData ? null : (_) => confirmActionDialog(
+                confirmDismiss: (_) => confirmActionDialog(
                   context: context,
-                  title: '${AfriStrings.DELETE} ${contact?.name}?',
+                  title: '${AfriStrings.DELETE} ${contact.name}?',
                   content: AfriStrings.CONFIRM_DELETION,
                   yesString: AfriStrings.DELETE, noString: AfriStrings.CANCEL
                 ),
-                onDismissed: !hasData ? null : (_)async{
-                  final isDeleted = await ref.read(deleteContactProvider.notifier).deleteContact(contact!);
+                onDismissed: (direction)async{
+                  final isDeleted = await ref.read(deleteContactProvider.notifier).deleteContact(contact);
                   //Refresh UI
                   ref.read(contactsProvider.notifier).loadContacts(delay: 0);
 
@@ -85,35 +89,27 @@ class AfriContactList extends ConsumerWidget {
                   ),
                   child: Row(
                     children: [
-                      !hasData ? AfriShimmer(
-                        height: 30, width: 30, radius: 15,
-                      ) : Icon(CupertinoIcons.person_circle, size: 30,),
+                      Icon(CupertinoIcons.person_circle, size: 30,),
                       const SizedBox(width: 15),
                       Expanded(
                         child: Column(
                           spacing: 5,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            !hasData ? AfriShimmer(
-                              height: 15, radius: 5,
-                              width: AfriHelperFuncs.getRandomNumber(constraints.maxWidth).toDouble(),
-                            ) : AfriFilterWidget(
-                              title: contact?.name ?? '',
+                            AfriFilterWidget(
+                              title: contact.name ?? '',
                               providerId: AfriStrings.ENTER_SEARCH_KEY,
                               style: Theme.of(context).textTheme.titleSmall,
                             ),
-                            !hasData ? AfriShimmer(height: 10, width: 120, radius: 3,)
-                              : Text(
-                              contact?.phoneNumber ?? '',
+                            Text(
+                              contact.phoneNumber ?? '',
                               style: Theme.of(context).textTheme.labelMedium,
                             )
                           ],
                         ),
                       ),
                       const SizedBox(width: 20),
-                      !hasData ? AfriShimmer(
-                        height: 30, width: 30, radius: 15,
-                      ) : NotificationIcon(contact: contact ?? Contact()),
+                      NotificationIcon(contact: contact),
                     ],
                   ),
                 ),
@@ -121,6 +117,47 @@ class AfriContactList extends ConsumerWidget {
             }
           );
         }
+      ),
+    );
+  }
+}
+
+
+
+class ContactLoadingShimmer extends StatelessWidget {
+  const ContactLoadingShimmer({super.key, required this.parentWidth});
+  final double parentWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    return AfriContainer(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      radius: 8,
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(10),
+      border: Border.all(
+        width: 0.2,
+        color: Theme.of(context).textTheme.headlineMedium?.color ?? AfriColors.hex1B1B1B
+      ),
+      child: Row(
+        children: [
+          AfriShimmer(height: 30, width: 30, radius: 15),
+          const SizedBox(width: 15),
+          Expanded(
+            child: Column(
+              spacing: 5,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AfriShimmer(
+                  height: 15, radius: 5,
+                  width: AfriHelperFuncs.getRandomNumber(parentWidth).toDouble(),
+                ),
+                AfriShimmer(height: 10, width: 120, radius: 3,)
+              ],
+            ),
+          ),
+          AfriShimmer(height: 30, width: 30, radius: 15) 
+        ],
       ),
     );
   }
